@@ -6,6 +6,7 @@ import com.bankservice.app.domain.model.Cliente;
 import com.bankservice.app.exceptions.ClientNotFoundException;
 import com.bankservice.app.exceptions.ClientsNotFoundException;
 import com.bankservice.app.exceptions.DatesException;
+import com.bankservice.app.exceptions.PhoneException;
 import com.bankservice.app.infraestructure.jpa.repositories.ClientRepository;
 import com.bankservice.app.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class ClientServiceImpl implements ClientService {
         if(clienteN.getCreated().after(new Date()))
             throw new DatesException("Date cannot be bigger than actual");
 
+        if(clienteN.getPhone().length()!=10)
+            throw new PhoneException("Phone it can be 10 size");
+
         repository.save(clienteN);
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
         return clientDTO;
@@ -78,8 +82,20 @@ public class ClientServiceImpl implements ClientService {
         Cliente clienteN = repository.findById(cliente.getId()).orElse(null);
         if(clienteN == null){
             throw new ClientNotFoundException("Any client was found to update");
-        }else if (clienteN.getCreated().after(new Date()))
+        }
+
+        clienteN.setName(cliente.getName());
+        clienteN.setLastname(cliente.getLastname());
+        clienteN.setAddress(cliente.getAddress());
+        clienteN.setCreated(cliente.getCreated());
+        clienteN.setPhone(cliente.getPhone());
+        clienteN.setAccountType(cliente.getAccountType());
+        clienteN.setIdentification(cliente.getIdentification());
+
+        if (clienteN.getCreated().after(new Date())) {
             throw new DatesException("Date cannot be bigger than actual");
+        }else if (clienteN.getPhone().length() != 10)
+            throw new PhoneException("Phone it can be 10 size");
 
         repository.save(clienteN);
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);

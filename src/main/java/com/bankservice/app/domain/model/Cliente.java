@@ -5,10 +5,7 @@ import com.bankservice.app.domain.enums.Identification;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,8 +26,7 @@ public class Cliente implements Serializable {
     private String name;
     @NotBlank(message = "LastName cannot be blank")
     private String lastname;
-    @Digits(integer = 10, fraction = 0, message = "Phone it can be 10 size")
-    private Long phone;
+    private String phone;
     @NotBlank(message = "Address cannot be blank")
     private String address;
     private AccountType accountType;

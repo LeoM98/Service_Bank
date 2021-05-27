@@ -1,9 +1,6 @@
 package com.bankservice.app.config;
 
-import com.bankservice.app.exceptions.ClientNotFoundException;
-import com.bankservice.app.exceptions.ClientsNotFoundException;
-import com.bankservice.app.exceptions.DatesException;
-import com.bankservice.app.exceptions.ExceptionsCode;
+import com.bankservice.app.exceptions.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,6 +47,17 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Date is major than actual");
+        body.put("exception_code", ExceptionsCode.ARGUMENTO_INVALIDO.getCode());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PhoneException.class)
+    public ResponseEntity<Object> PhonesBad() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Phone it can be 10 size");
         body.put("exception_code", ExceptionsCode.ARGUMENTO_INVALIDO.getCode());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);

@@ -21,7 +21,7 @@ public class ClientDTO implements Serializable {
     private Long id;
     private String name;
     private String lastname;
-    private Integer phone;
+    private String phone;
     private String address;
     private AccountType accountType;
     private Date created = new Date();

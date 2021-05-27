@@ -1,6 +1,9 @@
 package com.bankservice.app.config;
 
 import com.bankservice.app.exceptions.ClientNotFoundException;
+import com.bankservice.app.exceptions.ClientsNotFoundException;
+import com.bankservice.app.exceptions.DatesException;
+import com.bankservice.app.exceptions.ExceptionsCode;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,13 +25,34 @@ import java.util.stream.Collectors;
 public class ExceptionHandlers extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<Object> handleAddressNotFoundException() {
+    public ResponseEntity<Object> ClientNotFoundException() {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Client was not found");
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ClientsNotFoundException.class)
+    public ResponseEntity<Object> ClientsNotFoundException() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Clients was not found");
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DatesException.class)
+    public ResponseEntity<Object> DateGreather() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Date is major than actual");
+        body.put("exception_code", ExceptionsCode.ARGUMENTO_INVALIDO.getCode());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @Override

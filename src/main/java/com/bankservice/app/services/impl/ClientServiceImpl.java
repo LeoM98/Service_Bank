@@ -4,11 +4,14 @@ import com.bankservice.app.assemblers.ClientAssembler;
 import com.bankservice.app.domain.dto.ClientDTO;
 import com.bankservice.app.domain.model.Cliente;
 import com.bankservice.app.exceptions.ClientNotFoundException;
+import com.bankservice.app.exceptions.ClientsNotFoundException;
+import com.bankservice.app.exceptions.DatesException;
 import com.bankservice.app.infraestructure.jpa.repositories.ClientRepository;
 import com.bankservice.app.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,13 +33,22 @@ public class ClientServiceImpl implements ClientService {
         List<ClientDTO> clientDTOS = repository.findAll()
                 .stream().map(x-> assembler.clientToClientDto(x))
                 .collect(Collectors.toList());
+
+        if (clientDTOS.isEmpty())
+            throw new ClientsNotFoundException("Any clients was found");
+
         return clientDTOS;
     }
 
     @Override
     public ClientDTO save(Cliente cliente) {
-        repository.save(cliente);
-        ClientDTO clientDTO = assembler.clientToClientDto(cliente);
+
+        Cliente clienteN = cliente;
+        if(clienteN.getCreated().after(new Date()))
+            throw new DatesException("Date cannot be bigger than actual");
+
+        repository.save(clienteN);
+        ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
         return clientDTO;
     }
 
@@ -66,7 +78,9 @@ public class ClientServiceImpl implements ClientService {
         Cliente clienteN = repository.findById(cliente.getId()).orElse(null);
         if(clienteN == null){
             throw new ClientNotFoundException("Any client was found to update");
-        }
+        }else if (clienteN.getCreated().after(new Date()))
+            throw new DatesException("Date cannot be bigger than actual");
+
         repository.save(clienteN);
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
         return clientDTO;

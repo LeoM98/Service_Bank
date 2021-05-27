@@ -9,6 +9,7 @@ import com.bankservice.app.exceptions.DatesException;
 import com.bankservice.app.exceptions.PhoneException;
 import com.bankservice.app.infraestructure.jpa.repositories.ClientRepository;
 import com.bankservice.app.services.ClientService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,13 +85,7 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientNotFoundException("Any client was found to update");
         }
 
-        clienteN.setName(cliente.getName());
-        clienteN.setLastname(cliente.getLastname());
-        clienteN.setAddress(cliente.getAddress());
-        clienteN.setCreated(cliente.getCreated());
-        clienteN.setPhone(cliente.getPhone());
-        clienteN.setAccountType(cliente.getAccountType());
-        clienteN.setIdentification(cliente.getIdentification());
+        BeanUtils.copyProperties(cliente,clienteN);
 
         if (clienteN.getCreated().after(new Date())) {
             throw new DatesException("Date cannot be bigger than actual");

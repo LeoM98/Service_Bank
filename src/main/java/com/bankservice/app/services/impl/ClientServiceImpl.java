@@ -85,7 +85,7 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientNotFoundException("Any client was found to update");
         }
 
-        BeanUtils.copyProperties(cliente,clienteN);
+        clienteN = assembler.mapClienteToCliente(cliente);
 
         if (clienteN.getCreated().after(new Date())) {
             throw new DatesException("Date cannot be bigger than actual");

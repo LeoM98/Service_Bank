@@ -8,5 +8,6 @@ import org.mapstruct.Mapper;
 public interface ClientAssembler {
 
     ClientDTO clientToClientDto(Cliente cliente);
+    Cliente mapClienteToCliente(Cliente cliente);
 
 }

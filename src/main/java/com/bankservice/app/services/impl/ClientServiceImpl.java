@@ -96,4 +96,16 @@ public class ClientServiceImpl implements ClientService {
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
         return clientDTO;
     }
+
+    @Override
+    public ClientDTO patchName(String name, Long id) {
+
+        Optional<Cliente> cliente = repository.findById(id);
+        if(!cliente.isPresent())
+            throw new ClientNotFoundException("Any client was found");
+        cliente.get().setName(name);
+        repository.save(cliente.get());
+
+        return assembler.clientToClientDto(cliente.get());
+    }
 }

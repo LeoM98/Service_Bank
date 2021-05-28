@@ -48,4 +48,10 @@ public class ClientController {
         ClientDTO clientDTOS = service.update(cliente);
         return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/{name}")
+    public ResponseEntity<ClientDTO> patch(@PathVariable Long id, @PathVariable String name){
+        ClientDTO clientDTOS = service.patchName(name, id);
+        return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
+    }
 }

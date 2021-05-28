@@ -4,7 +4,6 @@ import com.bankservice.app.domain.dto.ClientDTO;
 import com.bankservice.app.domain.model.Cliente;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ClientService {
     List<ClientDTO> findAll();
@@ -12,4 +11,5 @@ public interface ClientService {
     ClientDTO findById(Long id);
     void delete(Long id);
     ClientDTO update(Cliente cliente);
+    ClientDTO patchName(String name, Long id);
 }

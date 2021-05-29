@@ -3,17 +3,14 @@ package com.bankservice.app.services.impl;
 import com.bankservice.app.assemblers.ClientAssembler;
 import com.bankservice.app.domain.dto.ClientDTO;
 import com.bankservice.app.domain.model.Cliente;
-import com.bankservice.app.exceptions.ClientNotFoundException;
-import com.bankservice.app.exceptions.ClientsNotFoundException;
-import com.bankservice.app.exceptions.DatesException;
-import com.bankservice.app.exceptions.PhoneException;
+import com.bankservice.app.exceptions.*;
 import com.bankservice.app.infraestructure.jpa.repositories.ClientRepository;
 import com.bankservice.app.services.ClientService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,9 +43,10 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO save(Cliente cliente) {
 
         Cliente clienteN = cliente;
-        if(clienteN.getCreated().after(new Date()))
+        if(clienteN.getCreated().isAfter(LocalDate.now()))
             throw new DatesException("Date cannot be bigger than actual");
-
+        if (clienteN.getCreated().getDayOfWeek() == DayOfWeek.SATURDAY || clienteN.getCreated().getDayOfWeek() == DayOfWeek.SUNDAY  )
+            throw new WeekException("It's not working in weekend day");
         if(clienteN.getPhone().length()!=10)
             throw new PhoneException("Phone it can be 10 size");
 
@@ -87,10 +85,12 @@ public class ClientServiceImpl implements ClientService {
 
         clienteN = assembler.mapClienteToCliente(cliente);
 
-        if (clienteN.getCreated().after(new Date())) {
+        if(clienteN.getCreated().isAfter(LocalDate.now())){
             throw new DatesException("Date cannot be bigger than actual");
         }else if (clienteN.getPhone().length() != 10)
             throw new PhoneException("Phone it can be 10 size");
+        else if (clienteN.getCreated().getDayOfWeek() == DayOfWeek.SATURDAY || clienteN.getCreated().getDayOfWeek() == DayOfWeek.SUNDAY  )
+            throw new WeekException("It's not working in weekend day");
 
         repository.save(clienteN);
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);

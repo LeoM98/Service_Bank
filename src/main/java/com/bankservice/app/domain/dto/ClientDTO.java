@@ -7,10 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,7 +22,7 @@ public class ClientDTO implements Serializable {
     private String phone;
     private String address;
     private AccountType accountType;
-    private Date created = new Date();
+    private LocalDate created;
     private Identification identification;
 
 }

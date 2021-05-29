@@ -27,6 +27,8 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Client was not found");
+        body.put("exception_code", ExceptionsCode.ARGUMENTO_NOT_FOUND.getCode());
+
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -37,6 +39,7 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Clients was not found");
+        body.put("exception_code", ExceptionsCode.ARGUMENTO_NOT_FOUND.getCode());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -59,6 +62,17 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Phone it can be 10 size");
         body.put("exception_code", ExceptionsCode.ARGUMENTO_INVALIDO.getCode());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WeekException.class)
+    public ResponseEntity<Object> BankClosed() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Bank is closed on weekend");
+        body.put("exception_code", ExceptionsCode.BANK_CLOSED.getCode());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

@@ -7,7 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -30,7 +30,7 @@ public class Cliente implements Serializable {
     @NotBlank(message = "Address cannot be blank")
     private String address;
     private AccountType accountType;
-    @Temporal(TemporalType.DATE)
-    private Date created;
+    @Column(columnDefinition = "DATE")
+    private LocalDate created;
     private Identification identification;
 }

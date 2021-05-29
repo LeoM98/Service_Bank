@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class ClientController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ClientDTO> save(@RequestBody Cliente cliente){
+    public ResponseEntity<ClientDTO> save(@Valid @RequestBody Cliente cliente){
         ClientDTO clientDTOS = service.save(cliente);
         return new ResponseEntity<>(clientDTOS, HttpStatus.CREATED);
     }
@@ -44,13 +45,13 @@ public class ClientController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<ClientDTO> update(@RequestBody Cliente cliente){
+    public ResponseEntity<ClientDTO> update(@Valid @RequestBody Cliente cliente){
         ClientDTO clientDTOS = service.update(cliente);
         return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/{name}")
-    public ResponseEntity<ClientDTO> patch(@PathVariable Long id, @PathVariable String name){
+    public ResponseEntity<ClientDTO> patch(@PathVariable Long id, @Valid @PathVariable String name){
         ClientDTO clientDTOS = service.patchName(name, id);
         return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
     }

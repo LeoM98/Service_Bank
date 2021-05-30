@@ -37,4 +37,10 @@ public class Cliente implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date created;
     private Identification identification;
+    @NotBlank(message = "identification number cannot be blank")
+    @Column(name = "identification_number")
+    private String numeroIdentificacion;
+    @Column(name = "cantidad_dinero")
+    @Min(value = 100000, message = "Money cannot be smaller than 100000")
+    private Long montoDinero;
 }

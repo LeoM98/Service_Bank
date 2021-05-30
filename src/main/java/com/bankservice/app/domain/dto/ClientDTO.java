@@ -24,5 +24,7 @@ public class ClientDTO implements Serializable {
     private AccountType accountType;
     private Date created;
     private Identification identification;
+    private String numeroIdentificacion;
+    private Long montoDinero;
 
 }

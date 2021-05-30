@@ -1,4 +1,4 @@
-package com.bankservice.app.Utils;
+package com.bankservice.app.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;

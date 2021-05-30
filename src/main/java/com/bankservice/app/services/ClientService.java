@@ -12,4 +12,7 @@ public interface ClientService {
     void delete(Long id);
     ClientDTO update(Cliente cliente);
     ClientDTO patchName(String name, Long id);
+    ClientDTO addMoney(Long money, Long id);
+    ClientDTO restMoney(Long money, Long id);
+
 }

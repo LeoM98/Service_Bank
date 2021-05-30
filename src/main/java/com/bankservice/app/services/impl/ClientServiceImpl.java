@@ -46,10 +46,13 @@ public class ClientServiceImpl implements ClientService {
         Date date = new Date();
         cliente.setCreated(date);
 
-        if (LocalDate.now().getDayOfWeek() == DayOfWeek.SATURDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
+        if (LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
             throw new WeekException("It's not working in weekend day");
         if(cliente.getPhone().length()!=10)
             throw new PhoneException("Phone it can be 10 size");
+        else if(cliente.getNumeroIdentificacion().length() != 10)
+            throw new DocumentoException("Identification number it can be 10 size");
+
 
         repository.save(cliente);
         ClientDTO clientDTO = assembler.clientToClientDto(cliente);
@@ -89,8 +92,10 @@ public class ClientServiceImpl implements ClientService {
 
         if (clienteN.getPhone().length() != 10)
             throw new PhoneException("Phone it can be 10 size");
-        else if (LocalDate.now().getDayOfWeek() == DayOfWeek.SATURDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
+        else if (LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
             throw new WeekException("It's not working in weekend day");
+        else if(clienteN.getNumeroIdentificacion().length() != 10)
+            throw new DocumentoException("Identification number it can be 10 size");
 
         repository.save(clienteN);
         ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
@@ -104,6 +109,34 @@ public class ClientServiceImpl implements ClientService {
         if(!cliente.isPresent())
             throw new ClientNotFoundException("Any client was found");
         cliente.get().setName(name);
+        repository.save(cliente.get());
+
+        return assembler.clientToClientDto(cliente.get());
+    }
+
+    @Override
+    public ClientDTO addMoney(Long money, Long id) {
+
+        Optional<Cliente> cliente = repository.findById(id);
+        if (!cliente.isPresent())
+            throw new ClientNotFoundException("Any client was found");
+
+        cliente.get().setMontoDinero(cliente.get().getMontoDinero()+money);
+        repository.save(cliente.get());
+
+        return assembler.clientToClientDto(cliente.get());
+    }
+
+    @Override
+    public ClientDTO restMoney(Long money, Long id) {
+
+        Optional<Cliente> cliente = repository.findById(id);
+        if (!cliente.isPresent())
+            throw new ClientNotFoundException("Any client was found");
+        if(cliente.get().getMontoDinero()<money)
+            throw new SubstractException("Insuficiente founds");
+
+        cliente.get().setMontoDinero(cliente.get().getMontoDinero()-money);
         repository.save(cliente.get());
 
         return assembler.clientToClientDto(cliente.get());

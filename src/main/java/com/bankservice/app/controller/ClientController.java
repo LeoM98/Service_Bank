@@ -55,4 +55,16 @@ public class ClientController {
         ClientDTO clientDTOS = service.patchName(name, id);
         return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
     }
+
+    @PatchMapping("/adicionar/{id}/{add}")
+    public ResponseEntity<ClientDTO> addMoney(@PathVariable Long id, @Valid @PathVariable Long add){
+        ClientDTO clientDTOS = service.addMoney(add, id);
+        return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
+    }
+
+    @PatchMapping("/restar/{id}/{rest}")
+    public ResponseEntity<ClientDTO> restMoney(@PathVariable Long id, @Valid @PathVariable Long rest){
+        ClientDTO clientDTOS = service.restMoney(rest, id);
+        return new ResponseEntity<>(clientDTOS, HttpStatus.OK);
+    }
 }

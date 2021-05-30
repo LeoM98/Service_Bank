@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,8 +42,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO save(Cliente cliente) {
 
-        Date date = new Date();
-        cliente.setCreated(date);
+        cliente.setCreated(LocalDate.now());
 
         if (LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
             throw new WeekException("It's not working in weekend day");
@@ -88,7 +86,7 @@ public class ClientServiceImpl implements ClientService {
         }
 
         clienteN = assembler.mapClienteToCliente(cliente);
-        clienteN.setCreated(new Date());
+        clienteN.setCreated(LocalDate.now());
 
         if (clienteN.getPhone().length() != 10)
             throw new PhoneException("Phone it can be 10 size");

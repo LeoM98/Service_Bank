@@ -1,5 +1,6 @@
 package com.bankservice.app;
 
+import com.bankservice.app.Utils.LocalDateAdapter;
 import com.bankservice.app.domain.enums.AccountType;
 import com.bankservice.app.domain.enums.Identification;
 import com.bankservice.app.domain.model.Cliente;
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
                 .address("Cartagena").phone("3006366657")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .created(LocalDate.now()).build();
 
         List<Cliente> clienteList = Lists.newArrayList(cliente);
         when(repository.findAll()).thenReturn(clienteList);
@@ -80,7 +81,7 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
                 .address("Cartagena").phone("3006366657")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .created(LocalDate.now()).build();
 
         when(repository.findById(1L)).thenReturn(Optional.of(cliente));
         MvcResult mvcResult = mvc.perform( MockMvcRequestBuilders
@@ -113,9 +114,10 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Fernando").lastname("Monsalvo")
                 .address("Cartagena").phone("1111111111")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .montoDinero(500000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
 
-        String json = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(cliente);
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
 
         MvcResult mvcResult = mvc.perform(post("/api/client/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
@@ -131,9 +133,10 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("").lastname("Monsalvo")
                 .address("Cartagena").phone("1111111111")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .montoDinero(500000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
 
-        String json = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(cliente);
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
 
         MvcResult mvcResult = mvc.perform(post("/api/client/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
@@ -149,9 +152,10 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Leonardo").lastname("")
                 .address("Cartagena").phone("1111111111")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .montoDinero(500000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
 
-        String json = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(cliente);
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
 
         MvcResult mvcResult = mvc.perform(post("/api/client/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
@@ -167,9 +171,10 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
                 .address("Cartagena").phone("3354")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .montoDinero(500000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
 
-        String json = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(cliente);
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
 
         MvcResult mvcResult = mvc.perform(post("/api/client/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
@@ -185,9 +190,48 @@ public class ClientServiceTest {
         Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
                 .address("").phone("1111111111")
                 .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
-                .created(new Date()).build();
+                .montoDinero(500000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
 
-        String json = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(cliente);
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
+
+        MvcResult mvcResult = mvc.perform(post("/api/client/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
+                andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(400, status);
+    }
+
+    @Test
+    public void saveClient_BadAmountMoney_getStatus_400() throws Exception{
+
+        Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
+                .address("Cartagena").phone("1111111111")
+                .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
+                .montoDinero(90000L).numeroIdentificacion("1212121212")
+                .created(LocalDate.now()).build();
+
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
+
+        MvcResult mvcResult = mvc.perform(post("/api/client/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).
+                andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(400, status);
+    }
+
+    @Test
+    public void saveClient_BadIdentificationNumber_getStatus_400() throws Exception{
+
+        Cliente cliente = Cliente.builder().name("Leonardo").lastname("Monsalvo")
+                .address("Cartagena").phone("1111111111")
+                .accountType(AccountType.AHORROS).identification(Identification.CÉDULA)
+                .montoDinero(1000000L).numeroIdentificacion("1212121212111")
+                .created(LocalDate.now()).build();
+
+        String json = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().toJson(cliente);
 
         MvcResult mvcResult = mvc.perform(post("/api/client/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)).

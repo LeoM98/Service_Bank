@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -35,7 +35,7 @@ public class Cliente implements Serializable {
     private AccountType accountType;
     @JsonIgnore
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date created;
+    private LocalDate created;
     private Identification identification;
     @NotBlank(message = "identification number cannot be blank")
     @Column(name = "identification_number")

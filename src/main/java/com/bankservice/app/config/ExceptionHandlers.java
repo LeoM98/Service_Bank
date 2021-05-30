@@ -77,6 +77,28 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DocumentoException.class)
+    public ResponseEntity<Object> DocumentException() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Document it can be 10 size");
+        body.put("exception_code", ExceptionsCode.ARGUMENTO_INVALIDO.getCode());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SubstractException.class)
+    public ResponseEntity<Object> SubstractException() {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Actual cannot be smaller than incoming");
+        body.put("exception_code", ExceptionsCode.FOUNDS_INSUFFICIENT.getCode());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 

@@ -4,7 +4,9 @@ public enum ExceptionsCode {
 
     ARGUMENTO_INVALIDO("E-001", "Invalid argument"),
     ARGUMENTO_NOT_FOUND("E-002", "Not found argument"),
-    BANK_CLOSED("E-003", "Bank closed");
+    BANK_CLOSED("E-003", "Bank closed"),
+    FOUNDS_INSUFFICIENT("E-004", "Insufficient founds");
+
 
     private final String code;
     private final String description;

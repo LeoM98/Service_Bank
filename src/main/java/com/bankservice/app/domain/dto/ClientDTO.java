@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,7 +22,7 @@ public class ClientDTO implements Serializable {
     private String phone;
     private String address;
     private AccountType accountType;
-    private LocalDate created;
+    private Date created;
     private Identification identification;
 
 }

@@ -2,13 +2,14 @@ package com.bankservice.app.domain.model;
 
 import com.bankservice.app.domain.enums.AccountType;
 import com.bankservice.app.domain.enums.Identification;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 public class Cliente implements Serializable {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -31,7 +33,8 @@ public class Cliente implements Serializable {
     @NotBlank(message = "Address cannot be blank")
     private String address;
     private AccountType accountType;
+    @JsonIgnore
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate created;
+    private Date created;
     private Identification identification;
 }

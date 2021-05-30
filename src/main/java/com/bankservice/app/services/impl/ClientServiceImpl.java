@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private ClientRepository repository;
-    private ClientAssembler assembler;
+    private final ClientRepository repository;
+    private final ClientAssembler assembler;
 
     @Autowired
     public ClientServiceImpl(ClientRepository repository, ClientAssembler assembler) {
@@ -42,16 +43,16 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO save(Cliente cliente) {
 
-        Cliente clienteN = cliente;
-        if(clienteN.getCreated().isAfter(LocalDate.now()))
-            throw new DatesException("Date cannot be bigger than actual");
-        if (clienteN.getCreated().getDayOfWeek() == DayOfWeek.SATURDAY || clienteN.getCreated().getDayOfWeek() == DayOfWeek.SUNDAY  )
+        Date date = new Date();
+        cliente.setCreated(date);
+
+        if (LocalDate.now().getDayOfWeek() == DayOfWeek.SATURDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
             throw new WeekException("It's not working in weekend day");
-        if(clienteN.getPhone().length()!=10)
+        if(cliente.getPhone().length()!=10)
             throw new PhoneException("Phone it can be 10 size");
 
-        repository.save(clienteN);
-        ClientDTO clientDTO = assembler.clientToClientDto(clienteN);
+        repository.save(cliente);
+        ClientDTO clientDTO = assembler.clientToClientDto(cliente);
         return clientDTO;
     }
 
@@ -84,12 +85,11 @@ public class ClientServiceImpl implements ClientService {
         }
 
         clienteN = assembler.mapClienteToCliente(cliente);
+        clienteN.setCreated(new Date());
 
-        if(clienteN.getCreated().isAfter(LocalDate.now())){
-            throw new DatesException("Date cannot be bigger than actual");
-        }else if (clienteN.getPhone().length() != 10)
+        if (clienteN.getPhone().length() != 10)
             throw new PhoneException("Phone it can be 10 size");
-        else if (clienteN.getCreated().getDayOfWeek() == DayOfWeek.SATURDAY || clienteN.getCreated().getDayOfWeek() == DayOfWeek.SUNDAY  )
+        else if (LocalDate.now().getDayOfWeek() == DayOfWeek.SATURDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
             throw new WeekException("It's not working in weekend day");
 
         repository.save(clienteN);
